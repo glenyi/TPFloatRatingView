@@ -3,6 +3,8 @@ TPFloatRatingView
 
 A simple rating view with whole, half or floating point values. I couldn't find anything that easily set floating point ratings, so I made this control based on the Ray Wenderlich tutorial found [here](goo.gl/B49Al4). Some of the best iOS tutorials that I've come across.
 
+![TPFloatRatingView Demo](https://raw.github.com/strekfus/TPFloatRatingView/master/TPFloatRatingViewDemo.gif "TPFloatRatingView Demo")
+
 Usage
 -----
 
