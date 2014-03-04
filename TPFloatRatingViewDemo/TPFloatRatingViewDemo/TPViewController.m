@@ -25,8 +25,8 @@
     self.ratingView.maxRating = 5;
     self.ratingView.rating = 2.5;
     self.ratingView.editable = YES;
-    self.ratingView.halfRatings = YES;
-    self.ratingView.floatRatings = YES;
+    self.ratingView.halfRatings = NO;
+    self.ratingView.floatRatings = NO;
     
     self.ratingLabel.text = [NSString stringWithFormat:@"%.2f", self.ratingView.rating];
     self.liveLabel.text = [NSString stringWithFormat:@"%.2f", self.ratingView.rating];
@@ -48,6 +48,14 @@
 - (void)floatRatingView:(TPFloatRatingView *)ratingView continuousRating:(CGFloat)rating
 {
     self.liveLabel.text = [NSString stringWithFormat:@"%.2f", rating];
+}
+
+- (IBAction)controlChange:(id)sender
+{
+    UISegmentedControl *control = (UISegmentedControl *)sender;
+    
+    self.ratingView.halfRatings = control.selectedSegmentIndex==1? YES:NO;
+    self.ratingView.floatRatings = control.selectedSegmentIndex==2? YES:NO;
 }
 
 @end
