@@ -14,6 +14,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *ratingLabel;
 @property (strong, nonatomic) IBOutlet UILabel *liveLabel;
 @property (strong, nonatomic) IBOutlet TPFloatRatingView *ratingView;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *segmentedControl;
 
 - (IBAction)controlChange:(id)sender;
 

@@ -25,11 +25,13 @@
     self.ratingView.maxRating = 5;
     self.ratingView.rating = 2.5;
     self.ratingView.editable = YES;
-    self.ratingView.halfRatings = NO;
+    self.ratingView.halfRatings = YES;
     self.ratingView.floatRatings = NO;
     
     self.ratingLabel.text = [NSString stringWithFormat:@"%.2f", self.ratingView.rating];
     self.liveLabel.text = [NSString stringWithFormat:@"%.2f", self.ratingView.rating];
+    
+    self.segmentedControl.selectedSegmentIndex = 1;
 }
 
 - (void)didReceiveMemoryWarning

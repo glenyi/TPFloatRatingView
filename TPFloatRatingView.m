@@ -56,15 +56,30 @@
     for (int i = 0; i < self.fullImageViews.count; ++i) {
         UIImageView *imageView = [self.fullImageViews objectAtIndex:i];
         // Change rating display by updating Full selected image layer mask
+        // Changing the layer mask on the fly is drawn weird sometimes, so for whole ratings, just hide/unhide the image
         if (self.rating >= i+1) {
             imageView.layer.mask.frame = imageView.layer.bounds;
+            imageView.hidden = NO;
         }
         else if (self.rating>i && self.rating<i+1){
-            CGRect maskBounds = CGRectMake(0, 0, (self.rating-i)*imageView.frame.size.width, imageView.frame.size.height);
-            imageView.layer.mask.frame = maskBounds;
+            if (!self.halfRatings && !self.floatRatings) {
+                imageView.layer.mask.frame = imageView.layer.bounds;
+            }
+            else {
+                CGRect maskBounds = CGRectMake(0, 0, (self.rating-i)*imageView.frame.size.width, imageView.frame.size.height);
+                imageView.layer.mask.frame = maskBounds;
+            }
+            imageView.hidden = NO;
         }
         else {
-            imageView.layer.mask.frame = CGRectMake(0, 0, 0, 0);
+            if (!self.halfRatings && !self.floatRatings) {
+                imageView.layer.mask.frame = imageView.layer.bounds;
+                imageView.hidden = YES;
+            }
+            else {
+                imageView.layer.mask.frame = CGRectMake(0, 0, 0, 0);
+                imageView.hidden = NO;
+            }
         }
     }
 }
