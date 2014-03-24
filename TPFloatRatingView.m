@@ -21,6 +21,8 @@
 {
     _emptySelectedImage = nil;
     _fullSelectedImage = nil;
+    _contentMode = UIViewContentModeCenter;
+    _minRating = 0;
     _maxRating = 5;
     _minImageSize = CGSizeMake(5, 5);
     _rating = 0;
@@ -55,31 +57,24 @@
 {
     for (int i = 0; i < self.fullImageViews.count; ++i) {
         UIImageView *imageView = [self.fullImageViews objectAtIndex:i];
-        // Change rating display by updating Full selected image layer mask
         // Changing the layer mask on the fly is drawn weird sometimes, so for whole ratings, just hide/unhide the image
-        if (self.rating >= i+1) {
+        if (!self.halfRatings && !self.floatRatings) {
             imageView.layer.mask.frame = imageView.layer.bounds;
-            imageView.hidden = NO;
+            imageView.hidden = self.rating<=i;
         }
-        else if (self.rating>i && self.rating<i+1){
-            if (!self.halfRatings && !self.floatRatings) {
+        // Change rating display by updating Full selected image layer mask
+        else {
+            if (self.rating >= i+1) {
                 imageView.layer.mask.frame = imageView.layer.bounds;
             }
-            else {
+            else if (self.rating>i && self.rating<i+1){
                 CGRect maskBounds = CGRectMake(0, 0, (self.rating-i)*imageView.frame.size.width, imageView.frame.size.height);
                 imageView.layer.mask.frame = maskBounds;
             }
-            imageView.hidden = NO;
-        }
-        else {
-            if (!self.halfRatings && !self.floatRatings) {
-                imageView.layer.mask.frame = imageView.layer.bounds;
-                imageView.hidden = YES;
-            }
             else {
-                imageView.layer.mask.frame = CGRectMake(0, 0, 0, 0);
-                imageView.hidden = NO;
+                imageView.layer.mask.frame = CGRectZero;
             }
+            imageView.hidden = NO;
         }
     }
 }
@@ -153,13 +148,13 @@
     // Add new image views
     for (int i = 0; i < self.maxRating; ++i) {
         UIImageView *emptyImageView = [[UIImageView alloc] init];
-        emptyImageView.contentMode = UIViewContentModeScaleAspectFit;
+        emptyImageView.contentMode = self.contentMode;
         emptyImageView.image = self.emptySelectedImage;
         [self.emptyImageViews addObject:emptyImageView];
         [self addSubview:emptyImageView];
         
         UIImageView *fullImageView = [[UIImageView alloc] init];
-        fullImageView.contentMode = UIViewContentModeScaleAspectFit;
+        fullImageView.contentMode = self.contentMode;
         fullImageView.image = self.fullSelectedImage;
         // Set mask layer to hide full images
         CALayer *maskLayer = [CALayer layer];
@@ -237,11 +232,11 @@
         }
     }
     
-    // Update delegate
-    if ([self.delegate respondsToSelector:@selector(floatRatingView:continuousRating:)] && self.rating!=newRating)
-        [self.delegate floatRatingView:self continuousRating:newRating];
+    self.rating = newRating<self.minRating? self.minRating:newRating;
     
-    self.rating = newRating;
+    // Update delegate
+    if ([self.delegate respondsToSelector:@selector(floatRatingView:continuousRating:)])
+        [self.delegate floatRatingView:self continuousRating:self.rating];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

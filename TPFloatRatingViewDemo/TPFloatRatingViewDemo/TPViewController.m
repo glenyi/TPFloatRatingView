@@ -22,7 +22,9 @@
     self.ratingView.delegate = self;
     self.ratingView.emptySelectedImage = [UIImage imageNamed:@"StarEmpty"];
     self.ratingView.fullSelectedImage = [UIImage imageNamed:@"StarFull"];
+    self.ratingView.contentMode = UIViewContentModeScaleAspectFill;
     self.ratingView.maxRating = 5;
+    self.ratingView.minRating = 1;
     self.ratingView.rating = 2.5;
     self.ratingView.editable = YES;
     self.ratingView.halfRatings = YES;

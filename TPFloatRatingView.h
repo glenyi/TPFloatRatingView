@@ -30,6 +30,16 @@
 @property (strong, nonatomic) UIImage *fullSelectedImage;
 
 /**
+ Sets the empty and full image view content mode. Defaults to UIViewContentModeCenter.
+ */
+@property (nonatomic) UIViewContentMode contentMode;
+
+/**
+ Minimum rating. Default is 0.
+ */
+@property (nonatomic) NSInteger minRating;
+
+/**
  Max rating value. Default is 5.
  */
 @property (nonatomic) NSInteger maxRating;
