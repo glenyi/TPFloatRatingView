@@ -207,6 +207,48 @@
     [self refresh];
 }
 
+- (void)setHalfRatings:(BOOL)halfRatings
+{
+    _halfRatings = halfRatings;
+    
+    // Update masks for next refresh
+    for (int i = 0; i < self.fullImageViews.count; ++i) {
+        UIImageView *imageView = [self.fullImageViews objectAtIndex:i];
+
+        if (self.rating >= i+1) {
+            imageView.layer.mask.frame = imageView.layer.bounds;
+        }
+        else if (self.rating>i && self.rating<i+1){
+            CGRect maskBounds = CGRectMake(0, 0, (self.rating-i)*imageView.frame.size.width, imageView.frame.size.height);
+            imageView.layer.mask.frame = maskBounds;
+        }
+        else {
+            imageView.layer.mask.frame = CGRectZero;
+        }
+    }
+}
+
+- (void)setFloatRatings:(BOOL)floatRatings
+{
+    _floatRatings = floatRatings;
+    
+    // Update masks for next refresh
+    for (int i = 0; i < self.fullImageViews.count; ++i) {
+        UIImageView *imageView = [self.fullImageViews objectAtIndex:i];
+        
+        if (self.rating >= i+1) {
+            imageView.layer.mask.frame = imageView.layer.bounds;
+        }
+        else if (self.rating>i && self.rating<i+1){
+            CGRect maskBounds = CGRectMake(0, 0, (self.rating-i)*imageView.frame.size.width, imageView.frame.size.height);
+            imageView.layer.mask.frame = maskBounds;
+        }
+        else {
+            imageView.layer.mask.frame = CGRectZero;
+        }
+    }
+}
+
 - (void)handleTouchAtLocation:(CGPoint)touchLocation
 {
     if (!self.editable)
