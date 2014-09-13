@@ -57,24 +57,23 @@
 {
     for (int i = 0; i < self.fullImageViews.count; ++i) {
         UIImageView *imageView = [self.fullImageViews objectAtIndex:i];
-        // Changing the layer mask on the fly is drawn weird sometimes, so for whole ratings, just hide/unhide the image
-        if (!self.halfRatings && !self.floatRatings) {
-            imageView.layer.mask.frame = imageView.layer.bounds;
-            imageView.hidden = self.rating<=i;
-        }
+        
         // Change rating display by updating Full selected image layer mask
-        else {
-            if (self.rating >= i+1) {
-                imageView.layer.mask.frame = imageView.layer.bounds;
-            }
-            else if (self.rating>i && self.rating<i+1){
-                CGRect maskBounds = CGRectMake(0, 0, (self.rating-i)*imageView.frame.size.width, imageView.frame.size.height);
-                imageView.layer.mask.frame = maskBounds;
-            }
-            else {
-                imageView.layer.mask.frame = CGRectZero;
-            }
+        if (self.rating >= i+1) {
+            imageView.layer.mask = nil;
             imageView.hidden = NO;
+        }
+        else if (self.rating>i && self.rating<i+1){
+            // Set mask layer to hide full images
+            CALayer *maskLayer = [CALayer layer];
+            maskLayer.frame = CGRectMake(0, 0, (self.rating-i)*imageView.frame.size.width, imageView.frame.size.height);
+            maskLayer.backgroundColor = [UIColor blackColor].CGColor;
+            imageView.layer.mask = maskLayer;
+            imageView.hidden = NO;
+        }
+        else {
+            imageView.layer.mask = nil;
+            imageView.hidden = YES;
         }
     }
 }
@@ -156,11 +155,6 @@
         UIImageView *fullImageView = [[UIImageView alloc] init];
         fullImageView.contentMode = self.contentMode;
         fullImageView.image = self.fullSelectedImage;
-        // Set mask layer to hide full images
-        CALayer *maskLayer = [CALayer layer];
-        maskLayer.frame = CGRectMake(0, 0, 0, 0);
-        maskLayer.backgroundColor = [UIColor blackColor].CGColor;
-        fullImageView.layer.mask = maskLayer;
         [self.fullImageViews addObject:fullImageView];
         [self addSubview:fullImageView];
     }
@@ -205,48 +199,6 @@
 {
     _rating = rating;
     [self refresh];
-}
-
-- (void)setHalfRatings:(BOOL)halfRatings
-{
-    _halfRatings = halfRatings;
-    
-    // Update masks for next refresh
-    for (int i = 0; i < self.fullImageViews.count; ++i) {
-        UIImageView *imageView = [self.fullImageViews objectAtIndex:i];
-
-        if (self.rating >= i+1) {
-            imageView.layer.mask.frame = imageView.layer.bounds;
-        }
-        else if (self.rating>i && self.rating<i+1){
-            CGRect maskBounds = CGRectMake(0, 0, (self.rating-i)*imageView.frame.size.width, imageView.frame.size.height);
-            imageView.layer.mask.frame = maskBounds;
-        }
-        else {
-            imageView.layer.mask.frame = CGRectZero;
-        }
-    }
-}
-
-- (void)setFloatRatings:(BOOL)floatRatings
-{
-    _floatRatings = floatRatings;
-    
-    // Update masks for next refresh
-    for (int i = 0; i < self.fullImageViews.count; ++i) {
-        UIImageView *imageView = [self.fullImageViews objectAtIndex:i];
-        
-        if (self.rating >= i+1) {
-            imageView.layer.mask.frame = imageView.layer.bounds;
-        }
-        else if (self.rating>i && self.rating<i+1){
-            CGRect maskBounds = CGRectMake(0, 0, (self.rating-i)*imageView.frame.size.width, imageView.frame.size.height);
-            imageView.layer.mask.frame = maskBounds;
-        }
-        else {
-            imageView.layer.mask.frame = CGRectZero;
-        }
-    }
 }
 
 - (void)handleTouchAtLocation:(CGPoint)touchLocation
